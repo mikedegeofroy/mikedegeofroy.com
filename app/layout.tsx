@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import Image from 'next/image';
+import arrowIcon from '@/public/arrow.svg';
 import localFont from 'next/font/local';
 import './globals.css';
+import Link from 'next/link';
 
 const featureMono = localFont({
   src: [
@@ -50,7 +52,28 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={featureMono.className}>{children}</body>
+      <body className={`min-h-svh flex flex-col ${featureMono.className}`}>
+        <header className='flex w-screen overflow-x-hidden flex-col justify-between p-5 text-xl md:text-3xl font-light'>
+          <div className='flex justify-between'>
+            <Link href='/'>
+              <div className='flex items-center'>
+                <h1>SELECTED PROJECTS</h1>
+                <Image
+                  className='dark:invert h-4 w-4 md:h-5 md:w-5 m-1'
+                  priority
+                  src={arrowIcon}
+                  alt={'arrow icon'}
+                />
+              </div>
+            </Link>
+            <h1 className='hidden md:block'>ADVANCED TECHNOLOGY</h1>
+            <h1 className='hidden md:block'>{new Date().getFullYear()}</h1>
+          </div>
+        </header>
+        <main className='flex-grow flex flex-col text-xl md:text-3xl font-light px-5 pb-5'>
+          {children}
+        </main>
+      </body>
     </html>
   );
 }

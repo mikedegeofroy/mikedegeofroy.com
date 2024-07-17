@@ -1,0 +1,60 @@
+---
+title: 'TELEGRAM FILESYSTEM'
+displayTitle: 'Building a telegram filesystem'
+description: 'This is the story on how I built a filesystem that mounts telegram channels onto my local filesystem.'
+---
+
+## Intro
+
+Hard drives are expensive. I don't want to pay up to 60 bucks for a half decent 1tb hard drive that I'm going to use maybe 3 times? Well.. I need to build myself a storage solution that works for me.
+
+I want it to be
+
+- In the cloud
+- Mountable to my local filesystem
+- Viewable from my phone
+- Mostly free or cheap
+
+But Mike, there are ready solutions like google drive or amazon s3 out there? why not just use them? Well first of all, fuck you. It's my video.
+
+I conveniently got this labwork assignment, the idea is to use FUSE, to mount something to my local filesystem, one of the options is discord or telegram.. which I conveniently use all of the time.. and also pay for! I get to 1. build a pet project 2. get a good grade for it and 3. split the work with a classmate.
+
+## How to mount telegram to my filesystem
+
+Ok well, we are going to be using fuse or filesystem in userspace, here's how it works.
+
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/FUSE_structure.svg/560px-FUSE_structure.svg.png)
+
+So apparently the whenever you call a command like ls or cd from the command line, if that happens to be in a directory where fuse is mounted to, it will redirect the call to your application and you can decide what to do with it.
+
+This let's you do literally anything, check this video out
+
+https://www.youtube.com/watch?v=1zvOdR02hk4
+
+cool cool cool cool cool... what are we writing it in? c++. why? because I hate myself.
+
+## The Plan
+
+My teammate is on a windows computer, this means that we need a shared environment to be able to develop in more or less 1 world. What does that sound like? That's right. Docker. So I wrote this Dockerfile... and this makefile.. you can now use make up make down make shell, to work with the docker container. Neat.
+
+I got fuse working just fine, and now, I'm going to let my teammate figure out how to correctly implement these functions, while I'm going to work on the part that works with telegram.
+
+## Telegram integration
+
+Here, this is me trying to figure out how to use telegram database library. What a shitshow. Here, have a look at the examples.
+
+I basically took this example, stripped it off all of the things that I don't need, and then I wrote my own handlers.. See, I wanted to make a request inside of a request, the thing is, the requests are handled by the request handler, this one is running in it's own thread, and it runs the handlers of each request in it's therad, that sucks, why? Well let's say I want to make a request in a request. The reqest_handler will receive the first request, call it's handler, but that handler, will make a new request, that request won't get completed until it's handled, but the handler is waiting for request 1 to complete.
+That's called a deadlock. So how do we fix this? Well, honestly I don't know, but here's what I made. Each request is now a class, and basically each class has it's own thread, and whenever we call a new request, it get's executed in that thread, this means that the request_handler can just call the handle, and then continue on handling incoming requests.
+Cool huh? Well maybe there's a solution using thread pools and shit like that.. I just decided to go with this, it looked like the simplest approach.
+
+Let's check out how the fuse part is going.. oh.. 2 functions... alright.
+
+### Coffee break
+
+I would like to put some stupid thought into here... You know, I 've talked to bunch of psychologists, never as a client, but just feeding my curiosity. And all of them really recommend for each person to have a psychologist of their own, which I mean.. makes sense from a business point of view, but that got me thinking, what would be the optimal amount of psychologists on earth, supposing that each psychologist can have multiple psychologists of their own as clients... So let's say each psychologist can have about 7 people a day, 5 days a week, in the best case scenario. Each psychologist should have about 35 clients... well I might be wrong, but here's what I came up with:
+
+so 35 \* x = 5.8 bn.. that's at least 159 mln psychologists... useless, but I thought it was kind of funny, specially when we think that there's 200 mln construction workers around the world... we would need almost as many psychologists for them to finally stop complaining about how society doesn't value them.
+
+## Let's get back to work
+
+Well now that we got the request's sorted out we have to think on how to actually parse the telegram messages into filesystem entities.
