@@ -1,7 +1,7 @@
 const AboutPage = () => {
   return (
     <div className='flex flex-grow flex-col justify-around md:text-2xl'>
-      <div className='gap-8 flex flex-col max-w-[60%]'>
+      <div className='gap-8 flex flex-col md:max-w-[60%]'>
         <h1>I’m mike, a software developer from Saint-Petersburg, Russia.</h1>
         <h1>I think that ideas should be shared.</h1>
         <h1>

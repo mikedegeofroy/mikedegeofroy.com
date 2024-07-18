@@ -30,9 +30,9 @@ export const Doc = defineDocumentType(() => ({
     description: {
       type: "string",
     },
-    published: {
+    selected: {
       type: "boolean",
-      default: true,
+      default: false,
     },
     visible: {
       type: "boolean",

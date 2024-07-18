@@ -4,13 +4,15 @@ import Link from 'next/link';
 const PostIndex = () => {
   return (
     <>
-      {allDocs.map((x, indx) => {
-        return (
-          <Link key={indx} href={x.slug}>
-            <h1 className='cursor-pointer w-fit'>{x.title}</h1>
-          </Link>
-        );
-      })}
+      {allDocs
+        .filter((x) => x.visible)
+        .map((x, indx) => {
+          return (
+            <Link key={indx} href={x.slug}>
+              <h1 className='cursor-pointer w-fit'>{x.title}</h1>
+            </Link>
+          );
+        })}
     </>
   );
 };

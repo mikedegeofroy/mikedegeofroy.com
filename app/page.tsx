@@ -8,13 +8,15 @@ const Home = () => {
     <div className='flex flex-grow overflow-x-hidden flex-col justify-between'>
       <span></span>
       <div className='flex flex-col gap-2'>
-        {allDocs.slice(0, 3).map((x, indx) => {
-          return (
-            <Link key={indx} href={x.slug}>
-              <h1 className='cursor-pointer w-fit'>{x.title}</h1>
-            </Link>
-          );
-        })}
+        {allDocs
+          .filter((x) => x.selected)
+          .map((x, indx) => {
+            return (
+              <Link key={indx} href={x.slug}>
+                <h1 className='cursor-pointer w-fit'>{x.title}</h1>
+              </Link>
+            );
+          })}
       </div>
       <div className='flex-col'>
         <div className='flex justify-between'>
@@ -30,7 +32,7 @@ const Home = () => {
             </div>
           </Link>
           <Link href={'/about'}>
-            <h1 className='hidden md:block'>ABOUT ME</h1>
+            <h1 className='hidden md:block'>PROJECTS</h1>
           </Link>
 
           <Link href={'/blog'}>

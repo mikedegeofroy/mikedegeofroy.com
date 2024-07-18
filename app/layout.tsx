@@ -4,6 +4,7 @@ import arrowIcon from '@/public/arrow.svg';
 import localFont from 'next/font/local';
 import './globals.css';
 import Link from 'next/link';
+import Quote from '@/components/Quote';
 
 const featureMono = localFont({
   src: [
@@ -29,7 +30,7 @@ const featureMono = localFont({
     },
     {
       path: './fonts/FeatureMono-Medium.ttf',
-      weight: '400',
+      weight: '500',
       style: 'normal',
     },
     {
@@ -66,7 +67,7 @@ export default function RootLayout({
                 />
               </div>
             </Link>
-            <h1 className='hidden md:block'>ADVANCED TECHNOLOGY</h1>
+            <Quote />
             <h1 className='hidden md:block'>{new Date().getFullYear()}</h1>
           </div>
         </header>

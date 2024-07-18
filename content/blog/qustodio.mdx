@@ -1,0 +1,52 @@
+---
+title: 'REMOVING QUSTODIO'
+displayTitle: 'How I fell in love with software engeneering'
+description: 'This is the story on how I built a filesystem that mounts telegram channels onto my local filesystem.'
+visible: false
+---
+
+# Introduction
+
+3 years ago, I wrote a post on reddit on how to uninstall Qustodio from MacOS. It was largely ignored and ended up archived, but over the years I started getting messages from people tanking me. I was surprised that somebody found my crude methods for getting rid of my parents restrictions useful, so I decided to make this information easier to find. Here's how a 13 year old cracked Qustodio.
+
+## Disabling Qustodio
+
+In Script Editor (Installed by default on all Macs) and run this script.
+
+```
+repeat
+	set app_name to "/Library/Application Support/Qustodio/bin/qproxy/qengine /Library/Application Support/Qustodio/bin/qproxy /Library/"
+	set pid to (do shell script "ps ax | grep " & (quoted form of app_name) & " | grep -v grep | awk '{print $1}'")
+	if pid is not "" then do shell script "sudo kill -9 " & pid with administrator privileges
+	set app_name to "/Library/Application Support/Qustodio/bin/qapp/QUpdateService"
+	set pid to (do shell script "ps ax | grep " & (quoted form of app_name) & " | grep -v grep | awk '{print $1}'")
+	if pid is not "" then do shell script "sudo kill -9 " & pid with administrator privileges
+end repeat
+```
+
+This script finds the processes "/Library/Application Support/Qustodio/bin/qproxy/qengine /Library/Application Support/Qustodio/bin/qproxy /Library/" and "/Library/Application Support/Qustodio/bin/qapp/QUpdateService" and kills them. In my case It would ask for permissions every 30 minutes, so I saved the script as a APP and once on the desktop I right clicked it and went to "Show Package Contents", dragged the 'applet' under 'Contents/MacOS/applet' into the terminal.
+
+In my case:
+'sudo /Desktop/removequstodio.app/Contents/MacOS/applet'
+
+_I'm not sure if this step is important but here it is anyway:_
+
+_I opened '/Library/LaunchAgents/' and in the 'Qustodio plist' I changed all '<true/>' to '<false/>'_
+
+_then I rebooted the computer._
+
+## Uninstalling Qustodio
+
+Remove all Qustodio related files under:
+
+'/Library/LaunchAgents/'
+
+'/Library/Preferences/'
+
+'/Library/Application Support/'
+
+'/Library/Caches/'
+
+Reboot your Mac and you're done!
+
+You can check if Qustodio is still running with 'ps -ax'
