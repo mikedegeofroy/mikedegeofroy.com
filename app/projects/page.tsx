@@ -1,7 +1,7 @@
 import { allDocs } from '@/.contentlayer/generated';
 import Link from 'next/link';
 
-const BlogIndex = () => {
+const ProjectIndex = () => {
   return (
     <>
       {allDocs
@@ -17,4 +17,4 @@ const BlogIndex = () => {
   );
 };
 
-export default BlogIndex;
+export default ProjectIndex;
