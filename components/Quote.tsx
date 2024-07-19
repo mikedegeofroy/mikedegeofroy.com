@@ -38,7 +38,7 @@ const Quote = () => {
   }, [quote]);
 
   return (
-    <div>
+    <div className='hidden md:block'>
       <AnimatePresence mode='wait'>
         <motion.h1
           key={currentLine}

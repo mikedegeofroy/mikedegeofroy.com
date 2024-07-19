@@ -44,6 +44,20 @@ const featureMono = localFont({
 export const metadata: Metadata = {
   title: 'mikedegeofroy.com',
   description: "Mike de Geofroy's portfolio.",
+  icons: {
+    icon: [
+      {
+        media: '(prefers-color-scheme: light)',
+        url: '/favicon-light.svg',
+        href: '/favicon-light.svg',
+      },
+      {
+        media: '(prefers-color-scheme: dark)',
+        url: '/favicon-dark.svg',
+        href: '/favicon-dark.svg',
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
