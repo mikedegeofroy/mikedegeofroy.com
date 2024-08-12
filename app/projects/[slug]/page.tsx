@@ -10,7 +10,7 @@ const getDocFromSlug = (slug: string) => {
   return doc;
 };
 
-const BlogPage = (props: any) => {
+const ProjectPage = (props: any) => {
   const slug = props.params.slug;
 
   const doc = getDocFromSlug(slug);
@@ -28,4 +28,4 @@ const BlogPage = (props: any) => {
   );
 };
 
-export default BlogPage;
+export default ProjectPage;
