@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { useMDXComponent } from 'next-contentlayer/hooks';
 
 import { cn } from '@/lib/utils';
+import Geometry from './Geometry';
 
 const components = {
   h1: ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
@@ -149,6 +150,7 @@ const components = {
     />
   ),
   Image,
+  Geometry
 };
 
 interface MdxProps {
