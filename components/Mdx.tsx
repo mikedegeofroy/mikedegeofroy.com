@@ -68,7 +68,10 @@ const components = {
   ),
   p: ({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
     <p
-      className={cn('leading-7 break-words [&:not(:first-child)]:mt-6', className)}
+      className={cn(
+        'leading-7 break-words [&:not(:first-child)]:mt-6',
+        className
+      )}
       {...props}
     />
   ),
@@ -150,7 +153,15 @@ const components = {
     />
   ),
   Image,
-  Geometry
+  ImageSwitcher: ({
+    className,
+    alt,
+    ...props
+  }: React.ImgHTMLAttributes<HTMLImageElement>) => (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img className={cn('rounded-md border', className)} alt={alt} {...props} />
+  ),
+  Geometry,
 };
 
 interface MdxProps {
