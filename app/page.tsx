@@ -18,7 +18,7 @@ const Home = () => {
       {projects.length > 0 && (
         <div className='mt-16 sm:mt-32'>
           <span className='mb-5 block font-medium'>Projects</span>
-          <div className='flex flex-col gap-2'>
+          <div className='flex flex-col gap-7 sm:gap-4'>
             {projects.map((x, indx) => {
               return (
                 <Link key={indx} href={x.slug}>
@@ -35,7 +35,7 @@ const Home = () => {
       {blog.length > 0 && (
         <div className='mt-16 sm:mt-32'>
           <span className='mb-5 block font-medium'>Blog</span>
-          <div className='flex flex-col gap-2'>
+          <div className='flex flex-col gap-7 sm:gap-4'>
             {blog.map((x, indx) => {
               return (
                 <Link key={indx} href={x.slug}>
