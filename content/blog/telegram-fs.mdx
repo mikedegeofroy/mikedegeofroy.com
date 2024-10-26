@@ -1,8 +1,8 @@
 ---
-title: 'TELEGRAM FILESYSTEM'
+title: 'Building a telegram filesystem'
 displayTitle: 'Building a telegram filesystem'
-description: 'This is the story on how I built a filesystem that mounts telegram channels onto my local filesystem.'
-selected: false
+description: 'How I built a filesystem that mounts telegram channels onto my local disk.'
+selected: true
 ---
 
 ## Intro
@@ -49,13 +49,5 @@ That's called a deadlock. So how do we fix this? Well, honestly I don't know, bu
 Cool huh? Well maybe there's a solution using thread pools and shit like that.. I just decided to go with this, it looked like the simplest approach.
 
 Let's check out how the fuse part is going.. oh.. 2 functions... alright.
-
-### Coffee break
-
-I would like to put some stupid thought into here... You know, I 've talked to bunch of psychologists, never as a client, but just feeding my curiosity. And all of them really recommend for each person to have a psychologist of their own, which I mean.. makes sense from a business point of view, but that got me thinking, what would be the optimal amount of psychologists on earth, supposing that each psychologist can have multiple psychologists of their own as clients... So let's say each psychologist can have about 7 people a day, 5 days a week, in the best case scenario. Each psychologist should have about 35 clients... well I might be wrong, but here's what I came up with:
-
-so 35 \* x = 5.8 bn.. that's at least 159 mln psychologists... useless, but I thought it was kind of funny, specially when we think that there's 200 mln construction workers around the world... we would need almost as many psychologists for them to finally stop complaining about how society doesn't value them.
-
-## Let's get back to work
 
 Well now that we got the request's sorted out we have to think on how to actually parse the telegram messages into filesystem entities.
