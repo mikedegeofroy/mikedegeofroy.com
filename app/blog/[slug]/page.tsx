@@ -16,7 +16,7 @@ const BlogPage = (props: any) => {
   const doc = getDocFromSlug(slug);
 
   return (
-    <div className='md:w-[75%] mx-auto'>
+    <div className='md:w-[75%] w-full mx-auto'>
       <div className='pb-10'>
         <h1 className='mt-2 scroll-m-20 text-5xl sm:text-7xl md:text-8xl font-medium tracking-tight py-10'>
           {doc.displayTitle ?? doc.title}
