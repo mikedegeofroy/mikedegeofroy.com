@@ -11,7 +11,7 @@ const Home = () => {
     <>
       <span className='mb-5 font-medium'>Today</span>
       <p className='text-foreground-muted dark:text-muted'>
-        Software Engineering student at ITMO University and founder of
+        Software Engineering student at ITMO University and a founder at
         shamps.dev, passionate about building seamless digital experiences that
         feel like magic.
       </p>
