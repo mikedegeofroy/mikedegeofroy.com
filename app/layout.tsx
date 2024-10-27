@@ -87,11 +87,13 @@ export default function RootLayout({
           >
             Mike de Geofroy
           </a>
-          <span className='text-medium font-medium leading-none text-muted'>
+          <span className='text-medium font-medium leading-none text-foreground-muted dark:text-muted'>
             Software Engineer
           </span>
         </header>
-        <main className='flex-grow flex flex-col'>{children}</main>
+        <main className='flex-grow flex flex-col text-xl md:text-3xl font-light px-5 pb-5'>
+          {children}
+        </main>
       </body>
     </html>
   );

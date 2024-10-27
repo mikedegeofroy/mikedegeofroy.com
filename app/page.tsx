@@ -10,7 +10,7 @@ const Home = () => {
   return (
     <>
       <span className='mb-5 font-medium'>Today</span>
-      <p className='text-muted'>
+      <p className='text-foreground-muted dark:text-muted'>
         Software Engineering student at ITMO University and founder of
         shamps.dev, passionate about building seamless digital experiences that
         feel like magic.
@@ -18,7 +18,7 @@ const Home = () => {
       {projects.length > 0 && (
         <div className='mt-16 sm:mt-32'>
           <span className='mb-5 block font-medium'>Projects</span>
-          <div className='flex flex-col gap-2'>
+          <div className='flex flex-col gap-7 sm:gap-4'>
             {projects.map((x, indx) => {
               return (
                 <Link key={indx} href={x.slug}>
@@ -35,13 +35,13 @@ const Home = () => {
       {blog.length > 0 && (
         <div className='mt-16 sm:mt-32'>
           <span className='mb-5 block font-medium'>Blog</span>
-          <div className='flex flex-col gap-2'>
+          <div className='flex flex-col gap-7 sm:gap-4'>
             {blog.map((x, indx) => {
               return (
                 <Link key={indx} href={x.slug}>
-                  <div className='-mx-3 flex flex-col rounded-md px-3 no-underline hover:bg-[#191918] sm:py-3'>
+                  <div className='-mx-3 flex flex-col rounded-md px-3 no-underline hover:bg-[#F5F4F4] dark:hover:bg-[#191918] sm:py-3'>
                     <h1 className='cursor-pointer w-fit'>{x.title}</h1>
-                    <p className='text-muted'>{x.description}</p>
+                    <p className='text-foreground-muted dark:text-muted'>{x.description}</p>
                   </div>
                 </Link>
               );
@@ -51,7 +51,7 @@ const Home = () => {
       )}
       <div className='mt-16 sm:mt-36'>
         <span className='mb-5 block font-medium'>More</span>
-        <p className='text-muted'>
+        <p className='text-foreground-muted dark:text-muted'>
           You can contact me at <b>@mikedegeofroy</b> on telegram.
         </p>
       </div>
