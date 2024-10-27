@@ -91,9 +91,7 @@ export default function RootLayout({
             Software Engineer
           </span>
         </header>
-        <main className='flex-grow flex flex-col text-xl md:text-3xl font-light px-5 pb-5'>
-          {children}
-        </main>
+        <main className='flex-grow flex flex-col'>{children}</main>
       </body>
     </html>
   );
