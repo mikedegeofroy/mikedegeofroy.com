@@ -87,7 +87,7 @@ export default function RootLayout({
           >
             Mike de Geofroy
           </a>
-          <span className='text-medium font-medium leading-none text-muted'>
+          <span className='text-medium font-medium leading-none text-foreground-muted dark:text-muted'>
             Software Engineer
           </span>
         </header>
