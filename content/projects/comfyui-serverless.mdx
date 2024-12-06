@@ -1,0 +1,75 @@
+---
+title: 'DishDash'
+displayTitle: 'Running a ComfyUI on a Runpod Worker (Serverless)'
+description: 'Find out how to run ComfyUI stable diffussion on a serverless worker.'
+visible: true
+selected: true
+---
+
+<GenerationShowcase />
+
+About 2 months ago I started working on a project that was aimed at getting a ComfyUI workflow running on a serverless project.    
+I started out with a set of models, custom nodes and a workflow that worked on a basic ComfyUI server.   
+  ![/blog/photo_2024-10-26 19.46.44.jpeg](/blog/photo_2024-10-26-19-46-44.jpeg)    
+   
+My first goal was getting reproducible builds, this meant finding a way to package the nodes and models (including the custom ones) together.    
+I at the start of my journey I was manually fetching every node and model, I wrote a shell script that would wget all of them. For me to be able to boot up a image from the Runpod registry, run my commands and have them prepare my instance for usage.   
+![image.png](/blog/image.png)    
+Here we run into my first roadblock, the images weigh over 50GB+, and took a while to install, so I decided to move them into a runpod volume that could be mounted on any instance I boot up.   
+![image.png](/blog/image_x.png)    
+After installing all the required models I figured out that the versions of ComfyUI and ComfUI-Manager in the runpod image are outdated. So I added a small shell script to update them.   
+## Deploying on Serverless   
+While looking for a solution I stumbled uppon this project, these guys are doing good work and provide a documentation and a `Dockerfile` so you can build your own image.   
+[GitHub - blib-la/runpod-worker-comfy: ComfyUI as a serverless API on RunPod](https://github.com/blib-la/runpod-worker-comfy)    
+I wanted to just pop in my scripts into the Dockerfile and call it a day. But that would produce a docker image that would be just waaay too heavy. So again, I added a runpod volume, updated the paths in the `extra\_model\_paths.yaml`.    
+I also stumbled upon the snapshot feature in the newer ComfyUI manager versions. I found this pull request on the runpod-worker-comfy repository that implemented loading your custom nodes from snapshots, they fortunately provided also all of the python packages as well, so that was perfect. 
+   
+[feat: optional restoring of ComfyUI snapshots to bake custom nodes into the Docker Image by kklemon · Pull Request #30 · blib-la/runpod-worker-comfy](https://github.com/blib-la/runpod-worker-comfy/pull/30)    
+
+After taking a snapshot, updating the paths I stubled upon the fact that I couldn't build the image locally, since I'm on a M1 Macbook Pro.    
+So I had to rent out a gpu instance at *cloud.google.com*. After a couple of attempts I finally got the image to build and pushed it onto the dockerhub repository.    
+Before actually running it on a serverless endpoint (which is a pain in the ass to debug) I ran the image on a normal Pod. If you are doing this yourself make sure to change the mount volume path to the values you set in `extra\_model\_paths.yaml`.   
+![image.png](/blog/image_4.png)    
+ *runpod-worker-comfy* *conveniently provides this environment variable to simulate the behaviour of a serverless endpoint.    
+![image.png](/blog/image_i.png)    
+By running the image on a pod found out that the *insightface* can't load from `extra\_model\_paths.yaml`. So I added a symlink to my insightface models in the `start.sh` file.   
+![image.png](/blog/image_l.png)    
+After this change the workflow ran seamlessly.   
+Alright, after making sure it works, we can host it on a serverless endpoint, I also added my S3 Bucket credentials.    
+![image.png](/blog/image_8.png)    
+\*redacted for privacy.   
+Okay, now we do have a small problem, the first couple generations timeout. That sucks…     
+// timeout error   
+*runpod-worker-comfy* does provide a environment variable to set the polling max retries, but as mentioned in [this issue](https://github.com/blib-la/runpod-worker-comfy/issues/64) those variables fail to cast to a integer when set from the Runpod configuration. So I hard coded some higher defaults and rebuilt the image.   
+```
+Error waiting for image generation: '<' not supported between instances of 'int' and 'str'
+```
+![image.png](/blog/image_q.png)    
+Alright, cool, it kind of works…!    
+
+<div className="grid grid-cols-2 gap-5 py-8" >
+    <img className="w-full" src="/blog/photo_2024-10-26-20-27-35.jpeg"/>
+    <img className="w-full" src="/blog/photo_2024-10-26-20-27-33.jpeg"/>
+</div>
+
+## Backend   
+So now we have a runpod endpoint that boots up a image on a request. And generates some output. That's cool but it's really impractical to use.    
+Each time we want to generate an image we need to push a huge json file to the /run endpoint that looks kind of like this.    
+![image.png](/blog/image_6.png)    
+I wrote up a quick flask implementation of a REST Api, gave it a upload endpoint that pushes the image to S3. Then I added a generate endpoint that will pass the source image to GPT-4o, to get a basic description of the person (needed to run the workflow), added some custom paramters like background color, agressiveness and body complexity, then after building the payload — it forwards the request to the runpod serverless endpoint.    
+As a result we have a neat endpoint that let's you upload a image with the generation parameters and a status endpoint. Neat.    
+![image.png](/blog/image_11.png)    
+## User Interface   
+   
+Alright, let's wrap this pretty api into a simple interface in React.    
+
+<div className="grid grid-cols-3 gap-5 py-8" >
+    <img className="w-full" src="/blog/image_e.png"/>
+    <img className="w-full" src="/blog/image_s.png"/>
+    <img className="w-full" src="/blog/image_g.png"/>
+</div>
+
+
+Alright, well, with some long polling and React magic we wrapped our API into a pretty interface that let's us use the serverless endpoint and run concurrent generations.    
+
+Overall it's was quite the fun getting all of this to work properly, but I'm not done yet, there's still a lot to do and a lot to improve on, a lot of code to clean up. But I'm just leaving this here with hopes that the next person doing something similar has a easier time.
