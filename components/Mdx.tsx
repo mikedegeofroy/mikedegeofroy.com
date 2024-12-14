@@ -4,7 +4,6 @@ import { useMDXComponent } from 'next-contentlayer/hooks';
 
 import { cn } from '@/lib/utils';
 import Geometry from './Geometry';
-import { GenerationShowcase } from '@/modules/blog/GenerationShowcase/ui/GenerationShowcase';
 import UrlPreview from './UrlPreview';
 
 const components = {
@@ -163,7 +162,6 @@ const components = {
         <img className={cn('rounded-md border', className)} alt={alt} {...props} />
     ),
     Geometry,
-    GenerationShowcase,
     UrlPreview
 };
 
