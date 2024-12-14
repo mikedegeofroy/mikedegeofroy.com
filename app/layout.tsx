@@ -103,7 +103,15 @@ export default function RootLayout({
                         </a>
                     </div>
                 </header>
-                <main className='flex-grow flex flex-col px-3'>{children}</main>
+                <main className='flex-grow flex flex-col px-3'>
+                  {children}
+                  <div className='mt-16'>
+                      <span className='mb-5 block font-medium'>More</span>
+                      <p className='text-foreground-muted dark:text-muted'>
+                          You can contact me at <b>@mikedegeofroy</b> on telegram.
+                      </p>
+                  </div>
+                </main>
             </body>
         </html >
     );

@@ -74,12 +74,6 @@ const Home = () => {
                     </div>
                 </div>
             )}
-            <div className='mt-16 sm:mt-36'>
-                <span className='mb-5 block font-medium'>More</span>
-                <p className='text-foreground-muted dark:text-muted'>
-                    You can contact me at <b>@mikedegeofroy</b> on telegram.
-                </p>
-            </div>
         </>
     );
 };
