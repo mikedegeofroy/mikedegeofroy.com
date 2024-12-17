@@ -54,7 +54,7 @@ export const metadata: Metadata = {
                 alt: "Software Engineering student at ITMO University.",
             },
         ],
-    },
+    }
 };
 
 export default function RootLayout({
