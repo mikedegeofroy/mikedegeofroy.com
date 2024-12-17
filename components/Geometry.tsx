@@ -42,7 +42,7 @@ export default function Geometry(props: any) {
                 <ambientLight intensity={3} />
                 <Duck />
                 <EffectComposer>
-                    <Bloom luminanceThreshold={0} luminanceSmoothing={5} height={300} />
+                    <Bloom luminanceThreshold={0} luminanceSmoothing={10} height={300} />
                 </EffectComposer>
             </Canvas>
         </div>
