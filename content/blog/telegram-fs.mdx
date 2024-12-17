@@ -1,24 +1,28 @@
 ---
-title: 'Building a telegram filesystem'
-displayTitle: 'Building a telegram filesystem'
-description: 'How I built a filesystem that mounts telegram channels onto my local disk.'
-selected: true
+title: 'My attempt at building a telegram filesystem'
+displayTitle: 'My attempt at building a telegram filesystem'
+description: 'How I tried to build a filesystem that mounts telegram channels onto my local disk.'
+selected: false
+visible: false
 ---
 
 ## Intro
 
-Hard drives are expensive. I don't want to pay up to 60 bucks for a half decent 1tb hard drive that I'm going to use maybe 3 times? Well.. I need to build myself a storage solution that works for me.
+I've always wanted to win a hackathon by using the most random tech stack possible, just to show that building products really isn't about the technologies you use, but how you leverage them and what you build with them.
 
-I want it to be
+An example of things we considered: Sratch, В☦☦, Huecker.io, Yoptascript, MS Paint, using Telegram's saved messages as a database.
+
+Using telegram saved messages as a database... hmm... What if you could mount a telegram chat onto your local filesystem?
+
+Well hey, it's:
 
 - In the cloud
-- Mountable to my local filesystem
 - Viewable from my phone
 - Mostly free or cheap
 
-But Mike, there are ready solutions like google drive or amazon s3 out there? why not just use them? Well first of all, fuck you. It's my video.
+But Mike, there are ready solutions like google drive or amazon s3 out there? why not just use them? Well, it's just not that fun.
 
-I conveniently got this labwork assignment, the idea is to use FUSE, to mount something to my local filesystem, one of the options is discord or telegram.. which I conveniently use all of the time.. and also pay for! I get to 1. build a pet project 2. get a good grade for it and 3. split the work with a classmate.
+I conveniently got a similar labwork assignment, the idea is to use FUSE, to mount something to my local filesystem, well, it's been kind of a meme in ITMO for a while to use Saved Messages in telegram as a database.. So well, sounded perfect for me and my @Etozherraf.
 
 ## How to mount telegram to my filesystem
 
@@ -30,13 +34,13 @@ So apparently the whenever you call a command like ls or cd from the command lin
 
 This let's you do literally anything, check this video out
 
-https://www.youtube.com/watch?v=1zvOdR02hk4
+<iframe className="w-full pt-5 h-auto aspect-video" src="https://www.youtube.com/embed/LZCILvr5tUk?si=rjfHRq5dhXgJJj1k" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 cool cool cool cool cool... what are we writing it in? c++. why? because I hate myself.
 
 ## The Plan
 
-My teammate is on a windows computer, this means that we need a shared environment to be able to develop in more or less 1 world. What does that sound like? That's right. Docker. So I wrote this Dockerfile... and this makefile.. you can now use make up make down make shell, to work with the docker container. Neat.
+My teammate is on a windows computer, this means that we need a shared environment to be able to develop in more or less one environment. So I'm using Docker and wrote this Dockerfile... and this makefile.. you can now use make up make down make shell, to work with the docker container. Neat.
 
 I got fuse working just fine, and now, I'm going to let my teammate figure out how to correctly implement these functions, while I'm going to work on the part that works with telegram.
 
