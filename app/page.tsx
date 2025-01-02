@@ -22,7 +22,7 @@ const Home = () => {
                 </a>
                 , currently pursuing a Software Engineering degree at ITMO University.
                 I&apos;m a full-stack developper profficient in C#, Golang and
-                Typescript.
+                TypeScript.
             </p>
             <div className="mt-16">
                 <span className="mb-5 block font-medium">Experience</span>
