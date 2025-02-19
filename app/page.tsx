@@ -28,7 +28,7 @@ const Home = () => {
                 <span className="mb-5 block font-medium">Experience</span>
                 <div className="flex flex-col gap-4 sm:gap-1">
                     <div className="-mx-3 flex flex-col rounded-md px-3 no-underline sm:py-3">
-                        <h1 className="w-fit">Somo Labs</h1>
+                        <h1 className="w-fit">SomaLabs</h1>
                         <div className="flex justify-between">
                             <p className="text-foreground-muted dark:text-muted">
                                 Middle C# Developer
