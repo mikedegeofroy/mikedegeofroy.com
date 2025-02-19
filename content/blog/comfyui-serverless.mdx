@@ -6,37 +6,43 @@ visible: true
 selected: true
 ---
 
-About two months ago, I started working on a project to run a ComfyUI workflow on a serverless platform ([runpod.io](https://runpod.io)). My goal was to use a combination of models, custom nodes, and workflows that originally worked on a basic ComfyUI server setup.
+About two months ago, I started working on a project where I needed to run a ComfyUI workflow on a serverless platform ([runpod.io](https://runpod.io)). My goal was to use a combination of models, custom nodes, and workflows that originally worked on a basic ComfyUI server setup.
 
-  ![/blog/photo_2024-10-26 19.46.44.jpeg](/blog/photo_2024-10-26-19-46-44.jpeg)
+![/blog/photo_2024-10-26 19.46.44.jpeg](/blog/photo_2024-10-26-19-46-44.jpeg)
 
-## Step 1: Setting Up Reproducible Builds
+## Step 1: Getting Reproducible Builds
 
-The first challenge was creating reproducible builds. This meant packaging all nodes and models (including custom ones) together. At the start, I manually fetched every node and model using a shell script with `wget` commands. This allowed me to boot up an image from the Runpod registry, run the commands, and prepare the instance for usage.
+The first challenge was setting up reproducible builds. This meant packaging all nodes and models (including custom ones) together. At first, I manually fetched every node and model using a shell script with `wget` commands. This allowed me to boot up an image from the Runpod registry, run the commands, and prepare the instance for usage.
 
 ![image.png](/blog/image.png)
 
-### Roadblock: Heavy Images
-
-The image sizes exceeded 50GB, taking a long time to install. To address this, I moved the models to a Runpod volume that could be mounted on any instance I boot up.
+But as one can imagine that isn't exactly efficient. The image sizes exceeded 50GB, taking a long time to install. To address this, I moved the models to a Runpod volume that could be mounted on any instance I boot up.
+Note that I couldn’t exactly do that with my custom nodes, since many of them require installing aditional python dependencies.
 
 ![image.png](/blog/image_x.png)
 
 After installing the required models, I found that the versions of ComfyUI and ComfyUI-Manager in the Runpod image were outdated. To fix this, I added a small shell script to update them automatically.
 
-## Deploying on Serverless
+It's about this time that I found out about ComfyUI-Manager's snapshot feature. It was a huge releif, since now, to boot up a new ComfyUI instance I could just start a new pod, update ComfyUI and ComfyUI-Manager with my shell script and load the snapshot.
 
-While researching solutions, I discovered this project:
+Good, now that we have a working ComfyUI server we can start trying to make it work on a serverless endpoint.
+
+## Step 2: Docker
+
+While looking for solutions on how to run ComfyUI on a serverless endpoint, I stumbled upon this project:
 
 [GitHub - blib-la/runpod-worker-comfy: ComfyUI as a serverless API on RunPod](https://github.com/blib-la/runpod-worker-comfy)
 
-These folks provided great documentation and a `Dockerfile` for building your own image. Initially, I thought I could just drop my scripts into the `Dockerfile` and call it a day. However, the resulting Docker image was far too heavy.
+These folks provided great documentation and a `Dockerfile` for building your own image. Perfect.
+Now, before deploying our container on a serverless endpoint (which can be difficult to debug), let's try to run it on a simple pod. The config provides a `SERVE_API_LOCALLY` environment variable.
 
-To resolve this, I added a Runpod volume and updated the paths in the `extra_model_paths.yaml` file. I also found the snapshot feature in newer ComfyUI-Manager versions. A helpful [pull request](https://github.com/blib-la/runpod-worker-comfy/pull/30) in the runpod-worker-comfy repository added support for loading custom nodes from snapshots, along with the required Python packages.
+ I added a Runpod volume and updated the paths in the `extra_model_paths.yaml` file. 
+
+A helpful [pull request](https://github.com/blib-la/runpod-worker-comfy/pull/30) in the runpod-worker-comfy repository added support for loading custom nodes from snapshots, along with the required Python packages.
 
 After taking a snapshot and updating the paths, I hit another snag: I couldn’t build the image locally on my M1 MacBook Pro. So, I rented a GPU instance from *cloud.google.com*. After several attempts, I finally built the image and pushed it to my DockerHub repository.
 
-Before running it on a serverless endpoint (which can be difficult to debug), I tested the image on a standard Pod. If you’re doing this yourself, make sure to update the mount volume path to match the values in `extra_model_paths.yaml`.
+Before running it on a serverless endpoint , I tested the image on a standard Pod. If you’re doing this yourself, make sure to update the volume mount path to match the values in `extra_model_paths.yaml`.
 
 ![image.png](/blog/image_4.png)
 
@@ -50,7 +56,9 @@ During testing, I discovered that *insightface* models couldn’t load from `ext
 
 After this change, the workflow ran seamlessly.
 
-### Moving to Serverless
+> pepee
+
+## Step 3: Deploying Serverless
 
 Once the workflow was running, I deployed it to a serverless endpoint and added my S3 bucket credentials.
 
@@ -59,7 +67,7 @@ Once the workflow was running, I deployed it to a serverless endpoint and added 
 
 However, there was an issue: the first few generations timed out.
 
-*runpod-worker-comfy* provides an environment variable for polling max retries, but as noted in [this issue](https://github.com/blib-la/runpod-worker-comfy/issues/64), these variables fail to cast to integers when set via the Runpod configuration. I resolved this by hardcoding higher defaults and rebuilding the image.
+*runpod-worker-comfy* provides an environment variable for polling max retries, but as noted in [this issue](https://github.com/blib-la/runpod-worker-comfy/issues/64), these variables fail to cast to integers when set via the Runpod configuration. I resolved this by hardcoding higher defaults and rebuilding the image (I know, it's less than ideal).
 
 ```
 Error waiting for image generation: '<' not supported between instances of 'int' and 'str'
