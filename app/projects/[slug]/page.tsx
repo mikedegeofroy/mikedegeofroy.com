@@ -1,4 +1,5 @@
 import { allDocs } from '@/.contentlayer/generated';
+import { metadata } from '@/app/layout';
 import { Mdx } from '@/components/Mdx';
 import { notFound } from 'next/navigation';
 
@@ -9,6 +10,51 @@ const getDocFromSlug = (slug: string) => {
 
   return doc;
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const doc = getDocFromSlug(params.slug);
+
+  const title = doc.title;
+  const description = doc.description || 'Blog post on mikedegeofroy.com';
+  const imageUrl = `https://mikedegeofroy.com/api/og?title=${encodeURIComponent(
+    title
+  )}`;
+
+  return {
+    ...metadata,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 675,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 675,
+          alt: title,
+        },
+      ],
+    },
+  };
+}
 
 const ProjectPage = (props: any) => {
   const slug = props.params.slug;
