@@ -1,6 +1,7 @@
 import { allDocs } from '@/.contentlayer/generated';
 import { metadata } from '@/app/layout';
 import { Mdx } from '@/components/Mdx';
+import { TelegramComments } from '@/components/TelegramComments';
 import { notFound } from 'next/navigation';
 
 const getDocFromSlug = (slug: string) => {
@@ -69,6 +70,9 @@ const BlogPage = (props: any) => {
         </h1>
       </div>
       <Mdx code={doc.body.code} />
+      {doc.telegramDiscussionUrl && (
+        <TelegramComments postUrl={doc.telegramDiscussionUrl} />
+      )}
     </>
   );
 };

@@ -1,50 +1,55 @@
-import { defineDocumentType, makeSource } from "contentlayer/source-files"
-import rehypeAutolinkHeadings from "rehype-autolink-headings"
-import rehypePrettyCode from "rehype-pretty-code"
-import rehypeSlug from "rehype-slug"
-import remarkGfm from "remark-gfm"
+import { defineDocumentType, makeSource } from 'contentlayer/source-files';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypePrettyCode from 'rehype-pretty-code';
+import rehypeSlug from 'rehype-slug';
+import remarkGfm from 'remark-gfm';
 
 const computedFields = {
   slug: {
-    type: "string",
+    type: 'string',
     resolve: (doc) => `/${doc._raw.flattenedPath}`,
   },
   slugAsParams: {
-    type: "string",
-    resolve: (doc) => doc._raw.flattenedPath.split("/").slice(1).join("/"),
+    type: 'string',
+    resolve: (doc) => doc._raw.flattenedPath.split('/').slice(1).join('/'),
   },
-}
+};
 
 export const Doc = defineDocumentType(() => ({
-  name: "Doc",
+  name: 'Doc',
   filePathPattern: `{blog,projects}/**/*.mdx`,
-  contentType: "mdx",
+  contentType: 'mdx',
   fields: {
     title: {
-      type: "string",
+      type: 'string',
       required: true,
     },
     displayTitle: {
-      type: "string",
+      type: 'string',
     },
     description: {
-      type: "string",
+      type: 'string',
     },
     selected: {
-      type: "boolean",
+      type: 'boolean',
       default: false,
     },
     visible: {
-      type: "boolean",
+      type: 'boolean',
       default: true,
+    },
+    telegramDiscussionUrl: {
+      type: 'string',
+      required: false,
+      description:
+        'The URL suffix for the Telegram discussion (e.g., "hummus_expert/709")',
     },
   },
   computedFields,
-}))
-
+}));
 
 export default makeSource({
-  contentDirPath: "./content",
+  contentDirPath: './content',
   documentTypes: [Doc],
   mdx: {
     remarkPlugins: [remarkGfm],
@@ -53,19 +58,19 @@ export default makeSource({
       [
         rehypePrettyCode,
         {
-          theme: "github-dark",
+          theme: 'github-dark',
           onVisitLine(node) {
             // Prevent lines from collapsing in `display: grid` mode, and allow empty
             // lines to be copy/pasted
             if (node.children.length === 0) {
-              node.children = [{ type: "text", value: " " }]
+              node.children = [{ type: 'text', value: ' ' }];
             }
           },
           onVisitHighlightedLine(node) {
-            node.properties.className.push("line--highlighted")
+            node.properties.className.push('line--highlighted');
           },
           onVisitHighlightedWord(node) {
-            node.properties.className = ["word--highlighted"]
+            node.properties.className = ['word--highlighted'];
           },
         },
       ],
@@ -73,11 +78,11 @@ export default makeSource({
         rehypeAutolinkHeadings,
         {
           properties: {
-            className: ["subheading-anchor"],
-            ariaLabel: "Link to section",
+            className: ['subheading-anchor'],
+            ariaLabel: 'Link to section',
           },
         },
       ],
     ],
   },
-})
+});
